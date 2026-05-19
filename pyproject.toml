@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hypergraph-routing-validation"
+version = "0.1.0"
+description = "Validation scripts for the Ramanujan hypergraph routing papers (Paper I and Paper II)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [{name = "Joshua M. Courtney"}]
+keywords = ["quantum-computing", "routing", "ramanujan-graphs", "neutral-atom"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Physics",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+    "numpy>=1.26,<3.0",
+    "scipy>=1.11,<2.0",
+    "networkx>=3.0,<4.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "pytest-xdist>=3"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["routing_lib*", "experiments*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "-v"

@@ -1,0 +1,21 @@
+# Exact dependency versions used to produce the validation results for
+# Paper I (Permutation Routing on Ramanujan Hypergraphs) and
+# Paper II (Block Permutation Routing on Ramanujan Hypergraphs).
+#
+# To recreate the environment used by the authors:
+#
+#     python -m venv .venv && . .venv/Scripts/activate     # Windows PowerShell
+#     # or: python -m venv .venv && source .venv/bin/activate   # POSIX
+#     pip install -r requirements-lock.txt
+#     pip install -e . --no-deps
+#
+# Tested on Python 3.12.4 (Windows 11) and Linux x86_64.
+# pyproject.toml has the supported version *ranges*; this file pins the
+# specific versions that the published numerical results were generated with.
+
+numpy==2.4.2
+scipy==1.17.0
+networkx==3.6.1
+
+# Optional: test runner
+pytest==9.0.2
