@@ -6,6 +6,8 @@ Validation scripts accompanying:
   Atom Quantum Architectures* (Paper I)
 - *Block Permutation Routing on Ramanujan Hypergraphs for Fault-Tolerant
   Quantum Architectures* (Paper II)
+- *Using Tanner Spectral Reduction to Improve Multi-Layer Optical Lattice Routing for 
+   Hypergraph-Product and Bivariate Bicycle qLDPC Codes* (Paper III)
 
 Each experiment script maps to specific theorems or claims in the manuscripts.
 
@@ -163,3 +165,51 @@ pytest >= 7    (for the test suite)
 ```
 
 See `pyproject.toml` and `requirements.txt` for exact bounds.
+
+## Paper III — Multi-Layer Optical Lattice Routing for HGP/LP and BB qLDPC Codes
+
+Validation scripts accompanying *Multi-Layer Optical Lattice Routing for
+Hypergraph-Product and Bivariate Bicycle qLDPC Codes via Tanner Spectral
+Reduction* (Paper III).
+
+Paper III reuses the shared `routing_lib` primitives and adds a `routing_lib.qldpc`
+subpackage for qLDPC code construction (HGP/LP Tanner graphs and the Bravyi
+bivariate-bicycle codes).
+
+### New library submodule: `routing_lib.qldpc`
+
+| Module | Contents |
+| --- | --- |
+| `routing_lib.qldpc.codes` | Classical (3,4)-biregular check-matrix sampler; classical Tanner graph; **HGP (Tillich–Zémor) Tanner graph** `hgp_tanner_graph`; circulant **LP** check matrices `lp_check_matrix_circulant`, `lp_code`. |
+| `routing_lib.qldpc.published_codes` | The four **Bravyi BB codes** (`BRAVYI_BB_CODES`) with builders `bb_check_matrices` / `bb_tanner_graph` / `get_bravyi_bb_tanner`; the Xu LP family (`XU_LP_CODES`, `get_xu_lp_tanner`). |
+| `routing_lib.qldpc.xu_scrambling` | Xu et al. Algorithm 3 single-layer-AOD baseline model. |
+
+### Active scripts — `experiments/paper3/`
+
+| Script | Validates / produces |
+| --- | --- |
+| `lp_tanner_spectrum.py` | Prop. 3.1 spectrum decomposition; Thm. 3.2 β_HGP = (1+β_base)/2 |
+| `bb_beta_feasibility_probe.py` | Thm. 3.5 BB Fourier reduction; the "no closed form for β_BB" result |
+| `bb_code_comparison.py` | Table `tab:bb-codes` (Bravyi BB β_BB, χ′, per-cycle) |
+| `direct_simulation.py` | Tables `tab:head-to-head` (HGP), `tab:asymptotic` per-cycle counts |
+| `lp_direct_simulation.py` | Table `tab:head-to-head` (LP rows); constructive König check |
+| `empirical_routing_constant.py` | Table `tab:k-emp` small-N block (k_emp ≈ 0.5) |
+| `kemp_large_n.py` | Table `tab:k-emp` engineering-N block (to 100,000) |
+| `konig_optimal_test.py` | Table `tab:konig-tight` (χ′ = Δ = 8 to N = 122,500) |
+| `nonqc_simulation.py` | Table `tab:nonqc` (QC vs non-QC wall-clock) |
+| `lp_random_voltage_sweep.py` | Table `tab:ram-frac` (Ramanujan fraction, point estimate) |
+| `lp_voltage_bands.py` | Table `tab:ram-frac` cross-seed mean ± std bands |
+| `crossover_boundary.py` | Amortization crossover R\* behind `tab:recommendations` |
+| `published_codes_comparison.py` | Cross-check on exact published [[N,K,d]] parameters |
+| `shifted_cayley_barrier.py` | Future-hardware N^{1/4} motion-barrier sweep (see note in `REPRODUCING.md`) |
+
+### Tests — `tests/`
+
+```
+pytest tests/test_paper3_spectral.py tests/test_paper3_konig.py -v
+```
+
+| Test file | Validates |
+| --- | --- |
+| `tests/test_paper3_spectral.py` | Thm. 3.2 (HGP closed form) and Thm. 3.5 (BB Fourier reduction) vs direct diagonalization |
+| `tests/test_paper3_konig.py` | Δ(G_T) = 8 (HGP) / 6 (BB) and König-tight explicit edge coloring (χ′ = Δ) |
