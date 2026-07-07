@@ -1,7 +1,0 @@
-numpy<3.0,>=1.26
-scipy<2.0,>=1.11
-networkx<4.0,>=3.0
-
-[dev]
-pytest>=7
-pytest-xdist>=3
