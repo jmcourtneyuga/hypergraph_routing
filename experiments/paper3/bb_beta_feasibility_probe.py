@@ -1,44 +1,4 @@
 #!/usr/bin/env python3
-"""Paper III/IV feasibility probe: is beta_BB predictable in closed form?
-
-Motivation
-----------
-Theorem 3.2 reduces the routing-relevant spectral ratio of an HGP code's
-Tanner graph to a single SVD on the (small) base parity-check matrix:
-    beta_HGP = (1 + beta_base) / 2.
-BB codes are NOT hypergraph products, so Theorem 3.2 does not apply. The
-open question flagged in section 6.1 of the draft is whether an analogous
-closed form exists for BB codes.
-
-This script tests two hypotheses across a wide sweep of BB codes:
-
-  H1 (FOURIER REDUCTION -- the real prize).
-      A BB code's check matrix is the 2x2 block of commuting circulants
-          H = [[A, B], [B^T, A^T]]   (each block l*m x l*m).
-      The 2D-DFT over Z_l x Z_m simultaneously diagonalizes every block,
-      so per frequency (a,b) in {0..l-1} x {0..m-1} the check operator is
-          M(a,b) = [[ ahat,        bhat       ],
-                    [ conj(bhat),  conj(ahat) ]],
-      where ahat(a,b) = sum_{(i,j) in A} w_l^{i a} w_m^{j b}, similarly bhat.
-      CLAIM: the full Tanner-graph spectrum equals the union over (a,b) of
-      {+/- s : s a singular value of M(a,b)}. If true, beta_BB is computable
-      from an l*m grid of 2x2 SVDs -- an O(l*m) reduction versus
-      diagonalizing the 4*l*m x 4*l*m Tanner adjacency. This is the BB
-      analogue of Theorem 3.2 (a reduction theorem, even if no one-line
-      formula exists).
-
-  H2 (SIMPLE ONE-LINE FORM).
-      Does beta_BB = (1 + max(beta_A, beta_B)) / 2 hold, where beta_A,
-      beta_B are the spectral ratios of the individual circulant blocks?
-      (This is the literal HGP-formula transplant; expected to FAIL since
-      BB is not a product, but tested honestly.)
-
-If H1 holds to machine precision and H2 fails, the takeaway is: beta_BB has
-a clean *structural* reduction (publishable) but not the HGP one-liner.
-
-USAGE:
-    python experiments/paper3/bb_beta_feasibility_probe.py
-"""
 import os
 import sys
 import time
@@ -56,10 +16,6 @@ from routing_lib.qldpc.published_codes import (
 
 RNG = np.random.default_rng(20260617)
 
-
-# ----------------------------------------------------------------------
-# Direct measurement (ground truth): full Tanner-graph spectrum
-# ----------------------------------------------------------------------
 def tanner_spectrum_direct(H_X, H_Z):
     """Full sorted spectrum of the BB Tanner-graph adjacency."""
     A = bb_tanner_graph(H_X, H_Z)
